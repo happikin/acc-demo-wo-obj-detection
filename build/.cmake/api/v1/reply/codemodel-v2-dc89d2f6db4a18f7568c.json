@@ -1,0 +1,86 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.3.2"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"name" : "",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "opendds_devguide_messenger",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "carlabridge::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-carlabridge-1ecfa05268c86e36e279.json",
+					"name" : "carlabridge",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "carladata_idl::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-carladata_idl-3bdea41de8bce34a94d4.json",
+					"name" : "carladata_idl",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "node1::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-node1-4efdcdba88520dde6275.json",
+					"name" : "node1",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "node2::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-node2-e70d5359f1af4dec412d.json",
+					"name" : "node2",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/media/sdv/47d6b45a-afd5-40a2-b8ae-c185573d86ab/Image_DDS_COde/yashesvi/carlabridge-end/build",
+		"source" : "/media/sdv/47d6b45a-afd5-40a2-b8ae-c185573d86ab/Image_DDS_COde/yashesvi/carlabridge-end"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 0
+	}
+}

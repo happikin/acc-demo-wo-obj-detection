@@ -1,0 +1,6 @@
+/media/sdv/47d6b45a-afd5-40a2-b8ae-c185573d86ab/Image_DDS_COde/yashesvi/carlabridge-end/build/CMakeFiles/rebuild_cache.dir
+/media/sdv/47d6b45a-afd5-40a2-b8ae-c185573d86ab/Image_DDS_COde/yashesvi/carlabridge-end/build/CMakeFiles/edit_cache.dir
+/media/sdv/47d6b45a-afd5-40a2-b8ae-c185573d86ab/Image_DDS_COde/yashesvi/carlabridge-end/build/CMakeFiles/carlabridge.dir
+/media/sdv/47d6b45a-afd5-40a2-b8ae-c185573d86ab/Image_DDS_COde/yashesvi/carlabridge-end/build/CMakeFiles/node2.dir
+/media/sdv/47d6b45a-afd5-40a2-b8ae-c185573d86ab/Image_DDS_COde/yashesvi/carlabridge-end/build/CMakeFiles/node1.dir
+/media/sdv/47d6b45a-afd5-40a2-b8ae-c185573d86ab/Image_DDS_COde/yashesvi/carlabridge-end/build/CMakeFiles/carladata_idl.dir

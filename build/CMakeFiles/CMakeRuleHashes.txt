@@ -1,0 +1,4 @@
+# Hashes of file build rules.
+666a23c8d5d8802c76e3e4bfd1702ed9 opendds_generated/CarlaDataC.h
+d8ec393f5f26867f38123f37770bad7f opendds_generated/CarlaDataTypeSupportC.h
+3876532f550215eabbe99e63a1046e38 opendds_generated/CarlaDataTypeSupportImpl.h
