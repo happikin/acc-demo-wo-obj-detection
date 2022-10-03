@@ -1,2 +1,0 @@
-/usr/bin/ar qc libcarladata_idl.a  CMakeFiles/carladata_idl.dir/opendds_generated/CarlaDataTypeSupportImpl.cpp.o CMakeFiles/carladata_idl.dir/opendds_generated/CarlaDataC.cpp.o CMakeFiles/carladata_idl.dir/opendds_generated/CarlaDataTypeSupportC.cpp.o
-/usr/bin/ranlib libcarladata_idl.a
