@@ -34,8 +34,7 @@ target_link_libraries(node1 ${opendds_libs} ${OpenCV_LIBS})
 
 add_executable(node2
   ../src/node2.cpp
-  ../src/RadarSensorListener.cpp
-  ../src/ImageSensorListener.cpp
+  ../src/SensorDataListener.cpp
 )
 target_link_libraries(node2 ${opendds_libs} ${OpenCV_LIBS})
 

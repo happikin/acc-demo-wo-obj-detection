@@ -39,50 +39,54 @@ RadarSensorListener::on_liveliness_changed(
 void
 RadarSensorListener::on_data_available(DDS::DataReader_ptr reader)
 {
-  CarlaData::RadarSensorDataReader_var reader_i =
-    CarlaData::RadarSensorDataReader::_narrow(reader);
+  // CarlaData::RadarSensorDataReader_var reader_i =
+  //   CarlaData::RadarSensorDataReader::_narrow(reader);
+  
+  CarlaData::SensorDataDataReader_var sensor_reader =
+    CarlaData::SensorDataDataReader::_narrow(reader);
 
-  if (!reader_i) {
+  if (!sensor_reader) {
     ACE_ERROR((LM_ERROR,
                ACE_TEXT("ERROR: %N:%l: on_data_available() -")
                ACE_TEXT(" _narrow failed!\n")));
     ACE_OS::exit(1);
   }
 
-  CarlaData::RadarSensor message;
+  CarlaData::RadarSensor radar_payload;
+  CarlaData::ImageSensor image_payload;
   DDS::SampleInfo info;
 
-  const DDS::ReturnCode_t error = reader_i->take_next_sample(message, info);
+  // const DDS::ReturnCode_t error = reader_i->take_next_sample(message, info);
 
-  if (error == DDS::RETCODE_OK) {
+  // if (error == DDS::RETCODE_OK) {
     // std::cout << "SampleInfo.sample_rank = " << info.sample_rank << std::endl;
     // std::cout << "SampleInfo.instance_state = " << OpenDDS::DCPS::InstanceState::instance_state_mask_string(info.instance_state) << std::endl;
 
-    if (info.valid_data) {
-      std::cout 
-        << std::to_string(std::chrono::system_clock::now().time_since_epoch().count())
-        << " received CarlaData::RadarSensor["
-        << "d:" << message.depth << ","
-        << "v:" << message.velocity << ","
-        << "az:" << message.azimuth << ","
-        << "al:" << message.altitude << ","
-        << "egov:" << message.ego_velocity << "]\n";
+    // if (info.valid_data) {
+    //   std::cout 
+    //     << std::to_string(std::chrono::system_clock::now().time_since_epoch().count())
+    //     << " received CarlaData::RadarSensor["
+    //     << "d:" << message.depth << ","
+    //     << "v:" << message.velocity << ","
+    //     << "az:" << message.azimuth << ","
+    //     << "al:" << message.altitude << ","
+    //     << "egov:" << message.ego_velocity << "]\n";
 
-        /**
-         * use Shrikant(ACC) here
-        */
+    //     /**
+    //      * use Shrikant(ACC) here
+    //     */
 
-        {
-          std::lock_guard<std::mutex> lock_guard(m_odometry_mutex);
-          m_odometry_data = adas_features::run_acc_algo(message);
-        }
-    }
+    //     {
+    //       std::lock_guard<std::mutex> lock_guard(m_odometry_mutex);
+    //       m_odometry_data = adas_features::run_acc_algo(message);
+    //     }
+    // }
 
-  } else {
-    ACE_ERROR((LM_ERROR,
-               ACE_TEXT("ERROR: %N:%l: on_data_available() -")
-               ACE_TEXT(" take_next_sample failed!\n")));
-  }
+  // } else {
+  //   ACE_ERROR((LM_ERROR,
+  //              ACE_TEXT("ERROR: %N:%l: on_data_available() -")
+  //              ACE_TEXT(" take_next_sample failed!\n")));
+  // }
 }
 
 void

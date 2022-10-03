@@ -39,20 +39,19 @@ SensorDataListener::on_liveliness_changed(
 void
 SensorDataListener::on_data_available(DDS::DataReader_ptr reader)
 {
-  CarlaData::RadarSensorDataReader_var reader_i =
-    CarlaData::RadarSensorDataReader::_narrow(reader);
+  CarlaData::SensorDataDataReader_var sensor_reader =
+    CarlaData::SensorDataDataReader::_narrow(reader);
 
-  if (!reader_i) {
+  if (!sensor_reader) {
     ACE_ERROR((LM_ERROR,
                ACE_TEXT("ERROR: %N:%l: on_data_available() -")
                ACE_TEXT(" _narrow failed!\n")));
     ACE_OS::exit(1);
   }
+  CarlaData::SensorData sensor_payload;
 
-  CarlaData::RadarSensor message;
   DDS::SampleInfo info;
-
-  const DDS::ReturnCode_t error = reader_i->take_next_sample(message, info);
+  const DDS::ReturnCode_t error = sensor_reader->take_next_sample(sensor_payload, info);
 
   if (error == DDS::RETCODE_OK) {
     // std::cout << "SampleInfo.sample_rank = " << info.sample_rank << std::endl;
@@ -61,21 +60,24 @@ SensorDataListener::on_data_available(DDS::DataReader_ptr reader)
     if (info.valid_data) {
       std::cout 
         << std::to_string(std::chrono::system_clock::now().time_since_epoch().count())
-        << " received CarlaData::RadarSensor["
-        << "d:" << message.depth << ","
-        << "v:" << message.velocity << ","
-        << "az:" << message.azimuth << ","
-        << "al:" << message.altitude << ","
-        << "egov:" << message.ego_velocity << "]\n";
+        << " received CarlaData::SensorData\n";
 
-        /**
-         * use Shrikant(ACC) here
-        */
+        std::cout << "radar ["
+          << sensor_payload.m_radardata.depth << ","
+          << sensor_payload.m_radardata.velocity << ","
+          << sensor_payload.m_radardata.azimuth << ","
+          << sensor_payload.m_radardata.altitude
+           << "]\n";
 
-        {
-          std::lock_guard<std::mutex> lock_guard(m_odometry_mutex);
-          m_odometry_data = adas_features::run_acc_algo(message);
-        }
+        cv::Mat img(
+          sensor_payload.m_imagedata.height,
+          sensor_payload.m_imagedata.width,
+          sensor_payload.m_imagedata.image_type,
+          sensor_payload.m_imagedata.raw_data.get_buffer()
+        );
+        cv::imshow("test-window",img);
+        cv::waitKey(1);
+
     }
 
   } else {
@@ -87,9 +89,15 @@ SensorDataListener::on_data_available(DDS::DataReader_ptr reader)
 
 void
 SensorDataListener::on_subscription_matched(
-  DDS::DataReader_ptr /*reader*/,
-  const DDS::SubscriptionMatchedStatus& /*status*/)
-{
+  DDS::DataReader_ptr reader,
+  const DDS::SubscriptionMatchedStatus& status
+) {
+  std::cout << "called on_subscription_matched()\n";
+  std::cout << "total_count           :" << status.total_count << std::endl;
+  std::cout << "total_count_change    :" << status.total_count_change << std::endl;
+  std::cout << "current_count         :" << status.current_count << std::endl;
+  std::cout << "current_count_change  :" << status.current_count_change << std::endl;
+  // DDS::InstanceHandle_t last_publication_handle;
 }
 
 void

@@ -7,6 +7,9 @@
 #include <dds/DCPS/LocalObject.h>
 #include <dds/DCPS/Definitions.h>
 #include "CarlaDataTypeSupportImpl.h"
+#include <opencv4/opencv2/opencv.hpp>
+#include <opencv4/opencv2/imgproc.hpp>
+#include <opencv4/opencv2/highgui.hpp>
 #include <chrono>
 #include <mutex>
 
@@ -16,6 +19,7 @@ private:
 
   CarlaData::VehicleOdometry m_odometry_data;
   std::mutex m_odometry_mutex;
+  
 
 public:
   virtual void on_requested_deadline_missed(

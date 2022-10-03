@@ -1,7 +1,6 @@
 #include <dds_publisher.hpp>
 #include <dds_subscriber.hpp>
 #include "VehicleOdometryListener.h"
-#include "RadarSensorListener.h"
 #include "CarlaDataTypeSupportImpl.h"
 #include <topics.hpp>
 #include <atomic>
@@ -24,32 +23,20 @@ int main(int argc, char *argv[]) {
 	signal(SIGINT,signal_handler);
 	dds_node this_node(3,args);
 
-	// this_node.create_topic<
-	// 	CarlaData::RadarSensorTypeSupport_ptr,
-	// 	CarlaData::RadarSensorTypeSupportImpl
-	// > (topic_names[0].c_str());
 	this_node.create_topic<
 		CarlaData::VehicleOdometryTypeSupport_ptr,
 		CarlaData::VehicleOdometryTypeSupportImpl
 	> (topic_names[1].c_str());
-	// this_node.create_topic<
-	// 	CarlaData::ImageSensorTypeSupport_ptr,
-	// 	CarlaData::ImageSensorTypeSupportImpl
-	// > (topic_names[2].c_str());
-
 	this_node.create_topic<
 		CarlaData::SensorDataTypeSupport_ptr,
 		CarlaData::SensorDataTypeSupportImpl
 	> (topic_names[3].c_str());
+	
 	// this topic has both RadarSensor + ImageSensor data in it
 
 	dds_publisher publisher(this_node);
 	dds_subscriber subscriber(this_node);
 
-	// publisher.create_writer<CarlaData::RadarSensorDataWriter>(
-	// 	this_node, topic_names[0]);
-	// publisher.create_writer<CarlaData::ImageSensorDataWriter>(
-	// 	this_node, topic_names[2]);
     subscriber.create_reader<CarlaData::VehicleOdometryDataReader>(
 		this_node,topic_names[1],(new VehicleOdometryListener));
 		
@@ -61,23 +48,24 @@ int main(int argc, char *argv[]) {
 		publisher.wait_for_subscriber(topic_names[3]);
 		for(size_t i{}; i<100; i++) {
 
-			CarlaData::RadarSensor m;
-			m.depth = i;
-			m.velocity = i+2;
-			m.azimuth = i*2;
-			m.altitude = i*3;
-
-			CarlaData::ImageSensor image;
-			long image_size = read_image.rows * read_image.cols * read_image.elemSize();
-			image.height = read_image.rows;
-			image.width = read_image.cols;
-			image.pixel_size = read_image.elemSize();
-			image.image_type = read_image.type();
-			image.raw_data.replace(image_size, image_size, read_image.data, false);
-
 			CarlaData::SensorData sensor_data;
-			memcpy((void*)&sensor_data.m_radardata, (void*)&m, sizeof(CarlaData::RadarSensor));
-			memcpy((void*)&sensor_data.m_imagedata, (void*)&image, sizeof(CarlaData::ImageSensor));
+
+			sensor_data.m_radardata.depth = i;
+			sensor_data.m_radardata.velocity = i+2;
+			sensor_data.m_radardata.azimuth = i*2;
+			sensor_data.m_radardata.altitude = i*3;
+
+			long image_size = read_image.rows * read_image.cols * read_image.elemSize();
+			sensor_data.m_imagedata.height = read_image.rows;
+			sensor_data.m_imagedata.width = read_image.cols;
+			sensor_data.m_imagedata.pixel_size = read_image.elemSize();
+			sensor_data.m_imagedata.image_type = read_image.type();
+			sensor_data.m_imagedata.raw_data.replace(
+				image_size,
+				image_size,
+				read_image.data,
+				false
+			);
 
 			publisher.write<CarlaData::SensorData,CarlaData::SensorDataDataWriter>(
 				sensor_data, topic_names[3]);
@@ -88,32 +76,6 @@ int main(int argc, char *argv[]) {
 		}
 		publisher.wait_for_acknowledgments(topic_names[3]);
 	}).detach();
-	
-	// std::thread([&](){
-	// 	cv::Mat read_image = cv::imread("/home/fev/Pictures/vibe1.png");
-	// 	publisher.wait_for_subscriber(topic_names[2]);
-	// 	while(close_flag.load() == 0) {
-
-	// 		CarlaData::ImageSensor image;
-	// 		long image_size = read_image.rows * read_image.cols * read_image.elemSize();
-
-	// 		image.height = read_image.rows;
-	// 		image.width = read_image.cols;
-	// 		image.pixel_size = read_image.elemSize();
-	// 		image.image_type = read_image.type();
-	// 		image.raw_data.replace(image_size, image_size, read_image.data, false);
-	// 		// cv::waitKey(1000);
-
-	// 		publisher.write<CarlaData::ImageSensor,CarlaData::ImageSensorDataWriter>(
-	// 			image, topic_names[2]);
-	// 		std::this_thread::sleep_for(
-	// 			std::chrono::milliseconds(250)
-	// 		);
-
-	// 		// exit(1);
-	// 	}
-	// 	publisher.wait_for_acknowledgments(topic_names[2]);
-	// }).detach();
 	
 	std::thread sub_thread([&](){
 		subscriber.wait_for_publisher(topic_names[1]);

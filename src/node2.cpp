@@ -1,8 +1,6 @@
 #include <dds_subscriber.hpp>
 #include <dds_publisher.hpp>
 #include "VehicleOdometryListener.h"
-// #include "RadarSensorListener.h"
-// #include "ImageSensorListener.hpp"
 #include "SensorDataListener.hpp"
 #include "CarlaDataTypeSupportImpl.h"
 #include "adas_features.hpp"
@@ -21,18 +19,12 @@ void signal_handler(int _signal) {
 int main(int argc, char *argv[]) {
 	signal(SIGINT,signal_handler);
 	dds_node this_node(argc,argv);
-	// this_node.create_topic<
-	// 	CarlaData::RadarSensorTypeSupport_ptr,
-	// 	CarlaData::RadarSensorTypeSupportImpl
-	// > (topic_names[0].c_str());
+
 	this_node.create_topic<
 		CarlaData::VehicleOdometryTypeSupport_ptr,
 		CarlaData::VehicleOdometryTypeSupportImpl
 	> (topic_names[1].c_str());
-	// this_node.create_topic<
-	// 	CarlaData::ImageSensorTypeSupport_ptr,
-	// 	CarlaData::ImageSensorTypeSupportImpl
-	// > (topic_names[2].c_str());
+
 	this_node.create_topic<
 		CarlaData::SensorDataTypeSupport_ptr,
 		CarlaData::SensorDataTypeSupportImpl
@@ -57,33 +49,6 @@ int main(int argc, char *argv[]) {
 	 * itself to be pre-empted too much due to low priority
 	 * thus never gets a subscriber
 	*/
-
-	// std::thread([&](){
-	// 	publisher.wait_for_subscriber(topic_names[1]);
-	// 	while(close_flag.load() == 0) {
-	// 		publisher.write<CarlaData::VehicleOdometry,CarlaData::VehicleOdometryDataWriter>(
-	// 			radar_listener->get_odometry(), topic_names[1]);
-	// 		std::this_thread::sleep_for(
-	// 			std::chrono::microseconds(100)
-	// 		);
-	// 	}
-	// 	std::cout << "waiting for acknowledgments on topic[" << topic_names[1] << "]\n";
-	// 	publisher.wait_for_acknowledgments(topic_names[1]);
-	// }).detach();
-
-	// std::thread([&](){
-	// 	while(close_flag.load() == 0) {
-	// 		// cv::imshow("test1",image_listener->get_image());
-	// 		// cv::waitKey(1000);
-	// 		cv::Mat img = image_listener->get_image();
-	// 		if(img.size().height > 0 && img.size().width > 0) {
-	// 			adas_features::run_object_detection_algo(img);
-	// 		}
-	// 		std::this_thread::sleep_for(
-	// 			std::chrono::microseconds(100)
-	// 		);
-	// 	}
-	// }).detach();
 
 	while(close_flag.load() == 0);
 	main_sub_thread.detach();
