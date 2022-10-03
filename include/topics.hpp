@@ -4,5 +4,6 @@
 std::vector<std::string> topic_names {
 	"RadarData",
 	"VehicleOdometryData",
-	"ImageData"
+	"ImageData",
+	"FullSensorData"
 };

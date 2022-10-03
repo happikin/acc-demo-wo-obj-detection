@@ -1,6 +1,6 @@
 module CarlaData {
 
-	@topic
+	// @topic
 	struct RadarSensor {
 		float depth;
 		float azimuth;
@@ -9,20 +9,26 @@ module CarlaData {
 		float ego_velocity;
 	};
 
-	@topic
-	struct VehicleOdometry {
-		float throttle;
-		float brake;
-		float steering;
-	};
-
-	@topic
+	// @topic
 	struct ImageSensor {
 		sequence<octet> raw_data;
 		uint16 height;
 		uint16 width;
 		uint8 pixel_size;
 		int16 image_type;
+	};
+
+	@topic
+	struct SensorData {
+		RadarSensor m_radardata;
+		ImageSensor m_imagedata;
+	};
+
+	@topic
+	struct VehicleOdometry {
+		float throttle;
+		float brake;
+		float steering;
 	};
 	
 };
