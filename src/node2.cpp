@@ -61,13 +61,25 @@ int main(int argc, char *argv[]) {
 		while(close_flag.load() == 0) {
 			CarlaData::VehicleOdometry local_odometry;
 			{
-				std::lock_guard<std::mutex> lock(g_sensor_mutex);
+				// std::lock_guard<std::mutex> lock(g_sensor_mutex);
 				local_odometry = adas_features::run_acc_algo(g_sensor_data.m_radardata);
-				adas_features::run_object_detection_algo({});
+				// adas_features::run_object_detection_algo({});
 			}
+			std::cout << "g_odometry.throttle:" << local_odometry.throttle
+				<< " g_odometry.brake: " << local_odometry.brake
+				<< " g_odometry.steer: " << local_odometry.steering
+				<< "\n";
+			std::cout << "radar.depth:" << g_sensor_data.m_radardata.depth
+				<< " radar.alt: " << g_sensor_data.m_radardata.altitude
+				<< " radar.azim: " << g_sensor_data.m_radardata.azimuth
+				<< "\n";
 			{
 				std::lock_guard<std::mutex> lock(g_odometry_mutex);
 				g_odometry = local_odometry;
+				// std::cout << "g_odometry.throttle:" << g_odometry.throttle
+				// 	<< "g_odometry.brake: " << g_odometry.brake
+				// 	<< "g_odometry.steer: " << g_odometry.steering
+				// 	<< "\n";
 			}
 			std::this_thread::sleep_for(
 				std::chrono::milliseconds(250)
@@ -84,7 +96,7 @@ int main(int argc, char *argv[]) {
 					CarlaData::VehicleOdometryDataWriter
 				>(g_odometry,topic_names[1]);
 				std::this_thread::sleep_for(
-					std::chrono::microseconds(50000)
+					std::chrono::microseconds(500)
 				);
 			}
 		}

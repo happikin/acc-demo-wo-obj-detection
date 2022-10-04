@@ -41,7 +41,7 @@ SensorDataListener::on_data_available(DDS::DataReader_ptr reader)
 {
   CarlaData::SensorDataDataReader_var sensor_reader =
     CarlaData::SensorDataDataReader::_narrow(reader);
-
+  std::cout << "inside on_data_available()\n";
   if (!sensor_reader) {
     ACE_ERROR((LM_ERROR,
                ACE_TEXT("ERROR: %N:%l: on_data_available() -")
@@ -54,8 +54,8 @@ SensorDataListener::on_data_available(DDS::DataReader_ptr reader)
   const DDS::ReturnCode_t error = sensor_reader->take_next_sample(sensor_payload, info);
 
   if (error == DDS::RETCODE_OK) {
-    // std::cout << "SampleInfo.sample_rank = " << info.sample_rank << std::endl;
-    // std::cout << "SampleInfo.instance_state = " << OpenDDS::DCPS::InstanceState::instance_state_mask_string(info.instance_state) << std::endl;
+    std::cout << "SampleInfo.sample_rank = " << info.sample_rank << std::endl;
+    std::cout << "SampleInfo.instance_state = " << OpenDDS::DCPS::InstanceState::instance_state_mask_string(info.instance_state) << std::endl;
 
     if (info.valid_data) {
       std::cout 
@@ -72,7 +72,7 @@ SensorDataListener::on_data_available(DDS::DataReader_ptr reader)
           << sensor_payload.m_radardata.velocity << ","
           << sensor_payload.m_radardata.azimuth << ","
           << sensor_payload.m_radardata.altitude
-           << "]\n";
+          << "]\n";
 
         cv::Mat img(
           sensor_payload.m_imagedata.height,
@@ -81,8 +81,10 @@ SensorDataListener::on_data_available(DDS::DataReader_ptr reader)
           sensor_payload.m_imagedata.raw_data.get_buffer()
         );
         
-        cv::imshow("test-window",img);
-        cv::waitKey(1);
+        if(img.size().area() > 0) {
+          cv::imshow("test-window",img);
+          cv::waitKey(1);
+        }
 
     }
 

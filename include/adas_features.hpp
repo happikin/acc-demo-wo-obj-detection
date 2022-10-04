@@ -48,6 +48,6 @@ public:
     static void run_object_detection_algo(
         cv::Mat _received_image
     ) {
-        std::cout << "running object detection algo\n";
+        // std::cout << "run`ning object detection algo\n";
     }
 };

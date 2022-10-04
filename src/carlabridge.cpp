@@ -457,7 +457,8 @@ void CarlaClient::dds_node_proc() {
 	std::thread([&](){
 		cv::Mat read_image = cv::imread("/home/fev/Pictures/vibe1.png");
 		publisher.wait_for_subscriber(topic_names[3]);
-		for(size_t i{}; i<100; i++) {
+		int i=0;
+		while(true) {
 
 			CarlaData::SensorData sensor_data;
 
