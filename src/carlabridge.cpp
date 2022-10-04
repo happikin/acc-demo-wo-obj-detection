@@ -455,7 +455,7 @@ void CarlaClient::dds_node_proc() {
 		this_node, topic_names[3]);
 
 	std::thread([&](){
-		cv::Mat read_image = cv::imread("/home/fev/Pictures/vibe1.png");
+		// cv::Mat read_image = cv::imread("/home/fev/Pictures/vibe1.png");
 		publisher.wait_for_subscriber(topic_names[3]);
 		int i=0;
 		while(true) {
@@ -467,17 +467,20 @@ void CarlaClient::dds_node_proc() {
 			sensor_data.m_radardata.azimuth = i*2;
 			sensor_data.m_radardata.altitude = i*3;
 
-			long image_size = read_image.rows * read_image.cols * read_image.elemSize();
-			sensor_data.m_imagedata.height = read_image.rows;
-			sensor_data.m_imagedata.width = read_image.cols;
-			sensor_data.m_imagedata.pixel_size = read_image.elemSize();
-			sensor_data.m_imagedata.image_type = read_image.type();
-			sensor_data.m_imagedata.raw_data.replace(
-				image_size,
-				image_size,
-				read_image.data,
-				false
-			);
+			{
+				std::lock_guard<std::mutex> lock(m_image_mutex);
+				long image_size = m_image_data.rows * m_image_data.cols * m_image_data.elemSize();
+				sensor_data.m_imagedata.height = m_image_data.rows;
+				sensor_data.m_imagedata.width = m_image_data.cols;
+				sensor_data.m_imagedata.pixel_size = m_image_data.elemSize();
+				sensor_data.m_imagedata.image_type = m_image_data.type();
+				sensor_data.m_imagedata.raw_data.replace(
+					image_size,
+					image_size,
+					m_image_data.data,
+					false
+				);
+			}
 
 			publisher.write<
 				CarlaData::SensorData,
