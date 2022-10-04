@@ -1,5 +1,5 @@
-#ifndef RADARSENSOR_LISTENER_H
-#define RADARSENSOR_LISTENER_H
+#ifndef SENSORDATA_LISTENER_H
+#define SENSORDATA_LISTENER_H
 
 #include <ace/Global_Macros.h>
 
@@ -13,6 +13,9 @@
 #include <chrono>
 #include <mutex>
 
+extern CarlaData::SensorData g_sensor_data;
+extern std::mutex g_sensor_mutex;
+
 class SensorDataListener
   : public virtual OpenDDS::DCPS::LocalObject<DDS::DataReaderListener> {
 private:
@@ -20,7 +23,6 @@ private:
   CarlaData::VehicleOdometry m_odometry_data;
   std::mutex m_odometry_mutex;
   
-
 public:
   virtual void on_requested_deadline_missed(
     DDS::DataReader_ptr reader,

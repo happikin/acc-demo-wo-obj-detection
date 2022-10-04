@@ -62,6 +62,11 @@ SensorDataListener::on_data_available(DDS::DataReader_ptr reader)
         << std::to_string(std::chrono::system_clock::now().time_since_epoch().count())
         << " received CarlaData::SensorData\n";
 
+        {
+          std::lock_guard<std::mutex> lock(g_sensor_mutex);
+          g_sensor_data = sensor_payload;
+        }
+
         std::cout << "radar ["
           << sensor_payload.m_radardata.depth << ","
           << sensor_payload.m_radardata.velocity << ","
@@ -75,6 +80,7 @@ SensorDataListener::on_data_available(DDS::DataReader_ptr reader)
           sensor_payload.m_imagedata.image_type,
           sensor_payload.m_imagedata.raw_data.get_buffer()
         );
+        
         cv::imshow("test-window",img);
         cv::waitKey(1);
 

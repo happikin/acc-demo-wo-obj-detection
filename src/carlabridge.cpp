@@ -331,7 +331,7 @@ void CarlaClient::generateWorld() {
 	carla::geom::Transform camTransform(carla::geom::Location(carla::geom::Vector3D(2,0,1)),carla::geom::Rotation(0,0,0));
 
 /******************************************** changing image resolution **************************************************/
-	auto blueprint=cameraBlueprintPtr->at(0);//.begin();
+	auto blueprint = cameraBlueprintPtr->at(0);//.begin();
 	blueprint.SetAttribute("image_size_x","300");
 	blueprint.SetAttribute("image_size_y","200");
 	blueprint.SetAttribute("sensor_tick","0.0005");
@@ -438,10 +438,12 @@ void CarlaClient::dds_node_proc() {
 		CarlaData::RadarSensorTypeSupport_ptr,
 		CarlaData::RadarSensorTypeSupportImpl
 	> (topic_names[0].c_str());
+
 	this_node.create_topic<
 		CarlaData::VehicleOdometryTypeSupport_ptr,
 		CarlaData::VehicleOdometryTypeSupportImpl
 	> (topic_names[1].c_str());
+	
 	this_node.create_topic<
 		CarlaData::ImageSensorTypeSupport_ptr,
 		CarlaData::ImageSensorTypeSupportImpl

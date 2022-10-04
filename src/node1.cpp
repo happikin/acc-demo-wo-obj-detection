@@ -37,9 +37,11 @@ int main(int argc, char *argv[]) {
 	dds_publisher publisher(this_node);
 	dds_subscriber subscriber(this_node);
 
-    subscriber.create_reader<CarlaData::VehicleOdometryDataReader>(
-		this_node,topic_names[1],(new VehicleOdometryListener));
-		
+	VehicleOdometryListener *odometry_listener =
+		new VehicleOdometryListener();
+    
+	subscriber.create_reader<CarlaData::VehicleOdometryDataReader>(
+		this_node,topic_names[1],(odometry_listener));
 	publisher.create_writer<CarlaData::SensorDataDataWriter>(
 		this_node, topic_names[3]);
 
@@ -67,8 +69,10 @@ int main(int argc, char *argv[]) {
 				false
 			);
 
-			publisher.write<CarlaData::SensorData,CarlaData::SensorDataDataWriter>(
-				sensor_data, topic_names[3]);
+			publisher.write<
+				CarlaData::SensorData,
+				CarlaData::SensorDataDataWriter
+			>(sensor_data, topic_names[3]);
 				
 			std::this_thread::sleep_for(
 				std::chrono::milliseconds(250)
